@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Pet(models.Model):
-    pet_id = models.IntegerField(primary_key=True)
+    pet_id = models.AutoField(primary_key=True)
     pet_name = models.CharField(max_length=100)
     species = models.CharField(max_length=100)
     breed = models.CharField(max_length=100)
