@@ -1,0 +1,126 @@
+{% extends "PetApp/base.html" %}
+{% block title %}Find a Friend, Change a Life{% endblock %}
+{% block extra_head %}
+<style>
+    .home-wrap { max-width:1200px; margin:auto; }
+    .hero {
+        position:relative;
+        overflow:hidden;
+        padding:clamp(34px,7vw,78px);
+        border:1px solid #e1e9de;
+        border-radius:28px;
+        background:radial-gradient(ellipse at 87% 18%,rgba(201,222,188,.72),transparent 34%),linear-gradient(125deg,#fff 5%,#f0f6ec 100%);
+    }
+    .hero::after {
+        position:absolute;
+        right:7%;
+        bottom:-120px;
+        display:grid;
+        width:300px;
+        height:300px;
+        place-items:center;
+        border:1px solid rgba(36,92,75,.1);
+        border-radius:50%;
+        color:rgba(36,92,75,.11);
+        content:"🐾";
+        font-size:135px;
+        transform:rotate(-18deg);
+    }
+    .hero-copy { position:relative; z-index:1; max-width:600px; }
+    .hero h1 { max-width:580px; margin:0; color:var(--ink); font-size:clamp(39px,6.6vw,68px); font-weight:800; letter-spacing:-.06em; line-height:1.04; }
+    .hero p { max-width:520px; margin:20px 0 0; color:#63746b; font-size:17px; line-height:1.75; }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:11px; margin-top:28px; }
+    .hero-actions .btn { padding:12px 19px; }
+    .trust-row { display:flex; flex-wrap:wrap; gap:18px; margin-top:28px; color:#61736a; font-size:12px; font-weight:650; }
+    .trust-row span::before { margin-right:7px; color:#538264; content:"✓"; font-weight:800; }
+    .impact-card { height:100%; padding:20px; border:1px solid var(--line); border-radius:15px; background:#fff; }
+    .impact-number { color:var(--green); font-size:28px; font-weight:780; letter-spacing:-.04em; }
+    .impact-label { margin-top:3px; color:var(--muted); font-size:12px; }
+    .story-card { height:100%; padding:23px; border:1px solid var(--line); border-radius:16px; background:#fff; }
+    .story-icon { display:grid; width:44px; height:44px; margin-bottom:17px; place-items:center; border-radius:14px; background:#e9f1e5; color:var(--green); font-size:21px; }
+    .story-card h3 { font-size:16px; font-weight:740; }
+    .story-card p { margin:8px 0 0; color:var(--muted); font-size:13px; line-height:1.7; }
+    .home-feature .animal-card { border-radius:16px; }
+    .home-cta { padding:clamp(25px,5vw,45px); border-radius:20px; background:var(--forest); color:#fff; }
+    .home-cta h2 { font-size:clamp(23px,3vw,32px); font-weight:760; letter-spacing:-.03em; }
+    .home-cta p { max-width:620px; margin:10px 0 0; color:#d5e4db; font-size:14px; line-height:1.7; }
+    .home-cta .btn { padding:11px 17px; }
+    @media(max-width:767px) {
+        .hero { border-radius:20px; }
+        .hero::after { right:-90px; bottom:-130px; width:230px; height:230px; font-size:100px; }
+        .hero p { font-size:15px; }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="home-wrap">
+    <section class="hero" aria-labelledby="home-title">
+        <div class="hero-copy">
+            <div class="eyebrow">A kinder way to find a companion</div>
+            <h1 id="home-title">Every animal deserves a place to call home.</h1>
+            <p>We bring people and animals together. Discover animals looking for a family, learn their stories, and connect with the people caring for them.</p>
+            <div class="hero-actions">
+                <a class="btn btn-green" href="{% url 'directory' %}">Meet the animals <span aria-hidden="true">→</span></a>
+                {% if user.is_authenticated %}
+                    <a class="btn btn-outline-green" href="{% url 'animal_create' %}">List an animal</a>
+                {% else %}
+                    <a class="btn btn-outline-green" href="{% url 'signup' %}">Join our community</a>
+                {% endif %}
+            </div>
+            <div class="trust-row" aria-label="Our values">
+                <span>All animals welcome</span><span>Community listings</span><span>Care comes first</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="row g-3 mt-3 mb-5" aria-label="Community at a glance">
+        <div class="col-6 col-md-4"><div class="impact-card"><div class="impact-number">{{ animal_count }}</div><div class="impact-label">animals in our directory</div></div></div>
+        <div class="col-6 col-md-4"><div class="impact-card"><div class="impact-number">{{ available_count }}</div><div class="impact-label">currently looking for a home</div></div></div>
+        <div class="col-md-4"><div class="impact-card"><div class="impact-number">One community</div><div class="impact-label">built around care, connection, and second chances</div></div></div>
+    </section>
+
+    <section class="mb-5" aria-labelledby="about-title">
+        <div class="row align-items-end g-3 mb-3">
+            <div class="col-lg-8"><div class="eyebrow">About Animal Adoption</div><h2 class="page-title" id="about-title" style="font-size:clamp(25px,3.8vw,36px)">A simple place to start a life-changing connection.</h2></div>
+            <div class="col-lg-4"><p class="page-subtitle">Our website helps animal carers share listings and helps future adopters discover their next best friend.</p></div>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-4"><article class="story-card"><div class="story-icon" aria-hidden="true">♡</div><h3>Discover animals</h3><p>Explore listings for dogs, cats, and animals of every kind. Filter by species, age, location, and adoption status.</p></article></div>
+            <div class="col-md-4"><article class="story-card"><div class="story-icon" aria-hidden="true">✎</div><h3>Share their story</h3><p>Carers can create a listing with helpful details, a photo, personality notes, and health information.</p></article></div>
+            <div class="col-md-4"><article class="story-card"><div class="story-icon" aria-hidden="true">⌂</div><h3>Find a caring home</h3><p>Get to know each animal and use the listing contact information to take the next step toward adoption.</p></article></div>
+        </div>
+    </section>
+
+    <section class="home-feature mb-5" aria-labelledby="featured-title">
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+            <div><div class="eyebrow">Ready to meet you</div><h2 class="section-title" id="featured-title" style="font-size:22px">Animals looking for a home</h2></div>
+            <a class="btn btn-outline-green btn-sm px-3 py-2" href="{% url 'directory' %}">Browse all animals →</a>
+        </div>
+        <div class="row g-3">
+            {% for animal in featured_animals %}
+                <div class="col-md-4"><article class="animal-card">
+                    <a href="{% url 'animal_detail' animal.pet_id %}">
+                        {% if animal.image %}<img class="animal-photo" src="{{ animal.image.url }}" alt="Photo of {{ animal.pet_name }}" loading="lazy">
+                        {% else %}<div class="animal-placeholder" aria-hidden="true">🐾</div>{% endif %}
+                    </a>
+                    <div class="animal-card-body">
+                        <div class="d-flex justify-content-between align-items-start gap-2"><div><h3 class="h5 mb-1"><a class="text-decoration-none text-dark" href="{% url 'animal_detail' animal.pet_id %}">{{ animal.pet_name }}</a></h3><div class="animal-meta">{{ animal.species }}{% if animal.breed %} · {{ animal.breed }}{% endif %}</div></div><span class="status">Available</span></div>
+                        {% if animal.location %}<div class="animal-meta mt-3">{{ animal.location }}</div>{% endif %}
+                        <a class="btn btn-outline-green btn-sm mt-3" href="{% url 'animal_detail' animal.pet_id %}">Get to know {{ animal.pet_name }}</a>
+                    </div>
+                </article></div>
+            {% empty %}
+                <div class="col-12"><div class="panel empty-state"><strong>New friends are on their way.</strong>There are no available animal listings right now. Visit the directory again soon.</div></div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="home-cta d-flex flex-wrap justify-content-between align-items-center gap-4">
+        <div><h2>Every helping hand makes a difference.</h2><p>Join the community to share a listing, keep an animal’s information up to date, and help more people find the companion they’ve been looking for.</p></div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-light" href="{% if user.is_authenticated %}{% url 'animal_create' %}{% else %}{% url 'signup' %}{% endif %}">{% if user.is_authenticated %}List an animal{% else %}Get started{% endif %}</a>
+            <a class="btn btn-outline-light" href="{% url 'directory' %}">Explore listings</a>
+        </div>
+    </section>
+</div>
+{% endblock %}

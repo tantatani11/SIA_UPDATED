@@ -1,0 +1,72 @@
+{% extends "PetApp/base.html" %}
+{% block title %}Animal Directory{% endblock %}
+{% block content %}
+<header class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div><div class="eyebrow">Find a new friend</div><h1 class="page-title">Animal directory</h1>
+        <p class="page-subtitle">Meet animals looking for a caring home. Browse, search, and find your match.</p></div>
+    {% if user.is_authenticated %}<a class="btn btn-green px-3 py-2" href="{% url 'animal_create' %}">＋ List an animal</a>{% endif %}
+</header>
+
+<form method="get" class="panel p-3 p-md-4 mb-4" aria-label="Filter animals">
+    <div class="row g-2 filter-grid">
+        <div class="col-md-4"><label class="visually-hidden" for="search">Search name, species, or breed</label>
+            <input id="search" class="form-control" name="q" value="{{ filters.q }}" placeholder="Search name, species, or breed"></div>
+        <div class="col-6 col-md-2"><label class="visually-hidden" for="species">Species</label>
+            <input id="species" class="form-control" name="species" value="{{ filters.species }}" list="speciesOptions" placeholder="Species">
+            <datalist id="speciesOptions">{% for item in species_list %}<option value="{{ item }}">{% endfor %}</datalist></div>
+        <div class="col-6 col-md-2"><label class="visually-hidden" for="breed">Breed</label><input id="breed" class="form-control" name="breed" value="{{ filters.breed }}" placeholder="Breed"></div>
+        <div class="col-6 col-md-2"><label class="visually-hidden" for="status">Status</label>
+            <select id="status" class="form-select" name="status"><option value="">All statuses</option>
+                {% for value,label in status_choices %}<option value="{{ value }}" {% if filters.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+            </select></div>
+        <div class="col-6 col-md-2"><label class="visually-hidden" for="sex">Sex</label>
+            <select id="sex" class="form-select" name="sex"><option value="">Any sex</option>
+                {% for value,label in sex_choices %}<option value="{{ value }}" {% if filters.sex == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+            </select></div>
+        <div class="col-6 col-md-2"><label class="visually-hidden" for="age">Age</label><input id="age" class="form-control" type="number" min="0" name="age" value="{{ filters.age }}" placeholder="Age"></div>
+        <div class="col-6 col-md-3"><label class="visually-hidden" for="location">Location</label><input id="location" class="form-control" name="location" value="{{ filters.location }}" placeholder="Location"></div>
+        <div class="col-6 col-md-3"><label class="visually-hidden" for="sort">Sort by</label>
+            <select id="sort" class="form-select" name="sort">
+                <option value="newest" {% if filters.sort == 'newest' %}selected{% endif %}>Newest first</option>
+                <option value="oldest" {% if filters.sort == 'oldest' %}selected{% endif %}>Oldest first</option>
+                <option value="name" {% if filters.sort == 'name' %}selected{% endif %}>Name A–Z</option>
+            </select></div>
+        <div class="col-6 col-md-auto d-flex gap-2"><button class="btn btn-green flex-grow-1 px-3" type="submit">Search</button><a class="btn btn-outline-green px-3" href="{% url 'directory' %}">Clear</a></div>
+    </div>
+</form>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="section-title">Meet the animals</h2><span class="animal-meta">{{ page_obj.paginator.count }} listing{{ page_obj.paginator.count|pluralize }}</span>
+</div>
+<div class="row g-3">
+    {% for animal in animals %}
+        <div class="col-sm-6 col-lg-4">
+            <article class="animal-card">
+                <a href="{% url 'animal_detail' animal.pet_id %}" class="text-decoration-none">
+                    {% if animal.image %}<img class="animal-photo" src="{{ animal.image.url }}" alt="Photo of {{ animal.pet_name }}" loading="lazy">
+                    {% else %}<div class="animal-placeholder" aria-hidden="true">🐾</div>{% endif %}
+                </a>
+                <div class="animal-card-body">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
+                        <div><h3 class="h5 mb-1"><a class="text-decoration-none text-dark" href="{% url 'animal_detail' animal.pet_id %}">{{ animal.pet_name }}</a></h3>
+                            <div class="animal-meta">{{ animal.species }}{% if animal.breed %} · {{ animal.breed }}{% endif %}</div></div>
+                        <span class="status {% if animal.adoption_status == 'Pending' %}pending{% elif animal.adoption_status == 'Adopted' %}adopted{% else %}legacy{% endif %}">{{ animal.adoption_status }}</span>
+                    </div>
+                    <div class="animal-meta mt-3">{% if animal.age != None %}{{ animal.age }} year{{ animal.age|pluralize }}{% endif %}{% if animal.sex %}{% if animal.age != None %} · {% endif %}{{ animal.sex }}{% endif %}{% if animal.location %}{% if animal.age != None or animal.sex %} · {% endif %}{{ animal.location }}{% endif %}</div>
+                    {% if animal.description %}<p class="animal-meta mt-2 mb-0">{{ animal.description|truncatewords:18 }}</p>{% endif %}
+                    <a href="{% url 'animal_detail' animal.pet_id %}" class="btn btn-outline-green btn-sm mt-3">View details</a>
+                </div>
+            </article>
+        </div>
+    {% empty %}
+        <div class="col-12"><div class="panel empty-state"><strong>No animals found just yet.</strong>Try changing your filters or check back soon.</div></div>
+    {% endfor %}
+</div>
+{% if page_obj.has_other_pages %}
+<nav class="mt-4" aria-label="Animal directory pages"><ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?q={{ filters.q|urlencode }}&species={{ filters.species|urlencode }}&breed={{ filters.breed|urlencode }}&location={{ filters.location|urlencode }}&status={{ filters.status|urlencode }}&sex={{ filters.sex|urlencode }}&age={{ filters.age|urlencode }}&sort={{ filters.sort }}&page={{ page_obj.previous_page_number }}">Previous</a></li>{% endif %}
+    <li class="page-item active"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+    {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?q={{ filters.q|urlencode }}&species={{ filters.species|urlencode }}&breed={{ filters.breed|urlencode }}&location={{ filters.location|urlencode }}&status={{ filters.status|urlencode }}&sex={{ filters.sex|urlencode }}&age={{ filters.age|urlencode }}&sort={{ filters.sort }}&page={{ page_obj.next_page_number }}">Next</a></li>{% endif %}
+</ul></nav>
+{% endif %}
+{% endblock %}

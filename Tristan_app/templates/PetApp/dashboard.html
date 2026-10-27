@@ -1,0 +1,34 @@
+{% extends "PetApp/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<header class="mb-4"><div class="eyebrow">Your adoption workspace</div><h1 class="page-title">Welcome, {{ user.first_name|default:user.username }}.</h1>
+    <p class="page-subtitle">A quick look at the animals and adoption activity in your community.</p></header>
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg"><div class="stat-card"><div class="stat-label">Total listings</div><div class="stat-value">{{ total_count }}</div></div></div>
+    <div class="col-6 col-lg"><div class="stat-card"><div class="stat-label">Available</div><div class="stat-value">{{ available_count }}</div></div></div>
+    <div class="col-6 col-lg"><div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value">{{ pending_count }}</div></div></div>
+    <div class="col-6 col-lg"><div class="stat-card"><div class="stat-label">Adopted</div><div class="stat-value">{{ adopted_count }}</div></div></div>
+    <div class="col-6 col-lg"><div class="stat-card"><div class="stat-label">My listings</div><div class="stat-value">{{ my_count }}</div></div></div>
+</div>
+<section class="panel p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-2"><h2 class="section-title">Available for adoption</h2><strong>{{ available_percent }}%</strong></div>
+    <div class="progress" role="progressbar" aria-label="Share of listings available" aria-valuenow="{{ available_percent }}" aria-valuemin="0" aria-valuemax="100" style="height:10px">
+        <div class="progress-bar" style="width:{{ available_percent }}%;background:#558264"></div>
+    </div>
+    <div class="d-flex flex-wrap gap-2 mt-4">
+        <a class="btn btn-green px-3 py-2" href="{% url 'animal_create' %}">＋ Add animal</a>
+        <a class="btn btn-outline-green px-3 py-2" href="{% url 'my_listings' %}">View my listings</a>
+        <a class="btn btn-outline-green px-3 py-2" href="{% url 'profile' %}">Edit profile</a>
+    </div>
+</section>
+<div class="row g-3">
+    <section class="col-lg-6"><div class="panel p-4 h-100"><div class="d-flex justify-content-between mb-3"><h2 class="section-title">Recently listed</h2><a href="{% url 'directory' %}" class="small text-success">Browse all</a></div>
+        {% for animal in recent_animals %}<div class="d-flex justify-content-between gap-3 py-2 border-bottom"><div><a class="fw-semibold text-decoration-none text-dark" href="{% url 'animal_detail' animal.pet_id %}">{{ animal.pet_name }}</a><div class="animal-meta">{{ animal.species }} · {{ animal.created_at|date:"M j, Y" }}</div></div><span class="status">{{ animal.adoption_status }}</span></div>
+        {% empty %}<div class="empty-state"><strong>No listings yet.</strong>Start by adding an animal to the directory.</div>{% endfor %}
+    </div></section>
+    <section class="col-lg-6"><div class="panel p-4 h-100"><h2 class="section-title mb-3">Recently updated</h2>
+        {% for animal in updated_animals %}<div class="d-flex justify-content-between gap-3 py-2 border-bottom"><div><a class="fw-semibold text-decoration-none text-dark" href="{% url 'animal_detail' animal.pet_id %}">{{ animal.pet_name }}</a><div class="animal-meta">{{ animal.species }} · updated {{ animal.updated_at|date:"M j, Y" }}</div></div><span class="status">{{ animal.adoption_status }}</span></div>
+        {% empty %}<div class="empty-state"><strong>No recent changes.</strong>Updates to listings will show here.</div>{% endfor %}
+    </div></section>
+</div>
+{% endblock %}

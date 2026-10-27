@@ -1,0 +1,31 @@
+{% extends "PetApp/base.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<header class="mb-4"><div class="eyebrow">Your account</div><h1 class="page-title">My profile</h1><p class="page-subtitle">Update your account and the contact information shown on your listings.</p></header>
+<div class="row g-4">
+    <div class="col-lg-8">
+        <form method="post" class="panel p-4 p-md-5" novalidate>
+            {% csrf_token %}
+            <h2 class="section-title mb-3">Personal information</h2>
+            {% for field in account_form %}
+                <div class="mb-3"><label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}
+                    {% if field.errors %}<div class="text-danger small mt-1">{{ field.errors }}</div>{% endif %}</div>
+            {% endfor %}
+            <hr class="my-4"><h2 class="section-title mb-3">Contact and bio</h2>
+            {% for field in profile_form %}
+                <div class="mb-3"><label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}
+                    {% if field.errors %}<div class="text-danger small mt-1">{{ field.errors }}</div>{% endif %}</div>
+            {% endfor %}
+            <button type="submit" class="btn btn-green px-4 py-2">Save profile</button>
+        </form>
+    </div>
+    <aside class="col-lg-4">
+        <div class="panel p-4 mb-3"><div class="rounded-circle d-grid place-items-center mb-3" style="width:60px;height:60px;background:#dce9d7;color:#245c4b;font-size:24px;font-weight:700">{{ user.first_name|default:user.username|first|upper }}</div>
+            <h2 class="section-title">{{ user.get_full_name|default:user.username }}</h2><div class="animal-meta mt-1">{{ user.email }}</div>
+            <div class="animal-meta mt-3">Member since {{ user.date_joined|date:"F Y" }}</div><div class="animal-meta mt-1">{{ my_count }} listing{{ my_count|pluralize }}</div>
+        </div>
+        <div class="panel p-4"><h2 class="section-title mb-2">Security</h2><p class="animal-meta">Keep your account secure by using a unique password.</p>
+            <a class="btn btn-outline-green" href="{% url 'password_change' %}">Change password</a></div>
+    </aside>
+</div>
+{% endblock %}
