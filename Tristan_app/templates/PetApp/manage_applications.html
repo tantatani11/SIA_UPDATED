@@ -1,0 +1,59 @@
+{% extends "PetApp/base.html" %}
+{% block title %}Manage Applications{% endblock %}
+{% block content %}
+<header class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div><div class="eyebrow">Staff workspace</div><h1 class="page-title">Adoption applications</h1>
+        <p class="page-subtitle">Review and update adoption requests.</p></div>
+    <a class="btn btn-outline-green px-3 py-2" href="{% url 'admin_dashboard' %}">Back to admin panel</a>
+</header>
+<form method="get" class="panel p-3 p-md-4 mb-4 d-flex flex-wrap gap-2 align-items-center">
+    <label class="form-label mb-0" for="status">Filter by status</label>
+    <select id="status" name="status" class="form-select" style="max-width:220px">
+        <option value="">All</option>
+        {% for value,label in status_choices %}<option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+    <button class="btn btn-green px-3" type="submit">Apply</button>
+    <a class="btn btn-outline-green px-3" href="{% url 'manage_applications' %}">Clear</a>
+</form>
+<div class="row g-3">
+    {% for app in applications %}
+        <div class="col-12">
+            <article class="panel p-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+                    <div>
+                        <h2 class="h5 mb-1">Application #{{ app.application_id }} — <a class="text-decoration-none" href="{% url 'animal_detail' app.animal.pet_id %}">{{ app.animal.pet_name }}</a></h2>
+                        <div class="animal-meta">{{ app.animal.species }}{% if app.animal.breed %} · {{ app.animal.breed }}{% endif %} · Owner: {{ app.animal.owner.username|default:"Legacy" }}</div>
+                    </div>
+                    <span class="status {% if app.status == 'Pending' %}pending{% elif app.status == 'Approved' %}{% else %}adopted{% endif %}">{{ app.status }}</span>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6"><strong>Applicant</strong><div>{{ app.full_name }} ({{ app.applicant.username }})</div><div class="animal-meta">{{ app.email }} · {{ app.phone }}</div></div>
+                    <div class="col-md-6"><strong>Address</strong><div style="white-space:pre-line">{{ app.address }}</div></div>
+                    <div class="col-md-4"><strong>Household</strong><div style="white-space:pre-line">{{ app.household_info }}</div></div>
+                    <div class="col-md-4"><strong>Experience</strong><div style="white-space:pre-line">{{ app.experience }}</div></div>
+                    <div class="col-md-4"><strong>Reason</strong><div style="white-space:pre-line">{{ app.reason }}</div></div>
+                </div>
+                <div class="animal-meta mb-3">Submitted {{ app.created_at|date:"M j, Y H:i" }} · Updated {{ app.updated_at|date:"M j, Y H:i" }}</div>
+                <form method="post" action="{% url 'update_application_status' app.application_id %}" class="row g-2 align-items-end">
+                    {% csrf_token %}
+                    <div class="col-md-3">
+                        <label class="form-label" for="status-{{ app.application_id }}">Status</label>
+                        <select id="status-{{ app.application_id }}" name="status" class="form-select">
+                            {% for value,label in status_choices %}<option value="{{ value }}" {% if app.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="notes-{{ app.application_id }}">Staff notes (optional)</label>
+                        <input id="notes-{{ app.application_id }}" name="notes" class="form-control" value="{{ app.notes }}" placeholder="Add notes for applicant">
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-green w-100" type="submit">Update application</button>
+                    </div>
+                </form>
+            </article>
+        </div>
+    {% empty %}
+        <div class="col-12"><div class="panel empty-state"><strong>No applications found.</strong></div></div>
+    {% endfor %}
+</div>
+{% endblock %}

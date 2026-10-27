@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#173f35">
+    <title>{% block title %}Animal Adoption{% endblock %} · Animal Adoption</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root { --ink:#20352f; --muted:#74817b; --green:#245c4b; --forest:#173f35; --cream:#f7f8f3; --line:#e8ece6; --sage:#dce9d7; }
+        body { min-height:100vh; background:var(--cream); color:var(--ink); font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; }
+        .navbar { background:var(--forest); }
+        .navbar-brand { display:flex; align-items:center; gap:10px; color:#fff!important; font-weight:750; }
+        .brand-mark { display:grid; width:36px; height:36px; place-items:center; border-radius:12px; background:var(--sage); font-size:20px; }
+        .navbar .nav-link { color:#dce8e1; font-size:14px; font-weight:600; }
+        .navbar .nav-link:hover,.navbar .nav-link.active { color:#fff; }
+        .navbar-toggler { border-color:#769487; }
+        .navbar-toggler-icon { filter:brightness(0) invert(1); }
+        .page-wrap { max-width:1200px; margin:auto; padding:36px 22px 64px; }
+        .eyebrow { margin-bottom:8px; color:var(--green); font-size:11px; font-weight:750; letter-spacing:.13em; text-transform:uppercase; }
+        .page-title { margin:0; color:var(--ink); font-size:clamp(28px,4vw,40px); font-weight:760; letter-spacing:-.045em; }
+        .page-subtitle { margin:8px 0 0; color:var(--muted); font-size:14px; }
+        .panel,.stat-card,.animal-card { border:1px solid var(--line); border-radius:16px; background:#fff; box-shadow:0 6px 22px rgba(27,55,43,.045); }
+        .stat-card { height:100%; padding:20px 22px; }
+        .stat-label { color:var(--muted); font-size:12px; font-weight:650; }
+        .stat-value { margin-top:7px; color:var(--ink); font-size:28px; font-weight:760; letter-spacing:-.04em; }
+        .btn-green { border:0; border-radius:9px; background:var(--green); color:#fff; font-weight:700; }
+        .btn-green:hover,.btn-green:focus { background:var(--forest); color:#fff; }
+        .btn-outline-green { border:1px solid #b7c9bc; border-radius:9px; color:var(--green); font-weight:650; }
+        .btn-outline-green:hover { background:#edf5ee; color:var(--forest); }
+        .form-control,.form-select { min-height:42px; border-color:#dfe5df; border-radius:8px; font-size:14px; }
+        .form-control:focus,.form-select:focus { border-color:#83aa90; box-shadow:0 0 0 3px rgba(65,123,86,.12); }
+        .panel input:not([type=checkbox]),.panel textarea,.panel select { min-height:42px; border:1px solid #dfe5df; border-radius:8px; padding:9px 12px; font-size:14px; }
+        .panel input[type=checkbox] { width:1rem; height:1rem; }
+        .form-label { color:#43544b; font-size:13px; font-weight:700; }
+        .message-alert { border:0; border-radius:10px; font-size:14px; }
+        .animal-card { overflow:hidden; height:100%; transition:transform .18s ease,box-shadow .18s ease; }
+        .animal-card:hover { transform:translateY(-3px); box-shadow:0 12px 28px rgba(27,55,43,.1); }
+        .animal-photo,.animal-placeholder { display:grid; width:100%; height:280px; place-items:center; background:#edf3e9; object-fit:cover; }
+        .animal-placeholder { color:#6f8b70; font-size:48px; }
+        .animal-card-body { padding:18px; }
+        .animal-meta { color:var(--muted); font-size:13px; }
+        .status { display:inline-flex; align-items:center; padding:5px 9px; border-radius:99px; background:#edf6ee; color:#38764d; font-size:11px; font-weight:750; }
+        .status.pending { background:#fff4df; color:#896222; }
+        .status.adopted,.status.legacy { background:#f1f0ed; color:#746d60; }
+        .section-title { margin:0; font-size:17px; font-weight:740; }
+        .empty-state { padding:46px 20px; color:var(--muted); text-align:center; }
+        .empty-state strong { display:block; margin-bottom:6px; color:var(--ink); }
+        .pagination .page-link { border-color:var(--line); color:var(--green); }
+        .pagination .active .page-link { border-color:var(--green); background:var(--green); color:#fff; }
+        .footer-note { color:var(--muted); font-size:12px; }
+        @media(max-width:575px) { .page-wrap { padding:26px 15px 44px; } .filter-grid > div { width:100%; } }
+        @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition-duration:.01ms!important; } }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}"><span class="brand-mark" aria-hidden="true">🐾</span> Animal Adoption</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavigation" aria-controls="mainNavigation" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavigation">
+            <div class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+                <a class="nav-link" href="{% url 'directory' %}">Animal directory</a>
+                {% if user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                    <a class="nav-link" href="{% url 'animal_create' %}">Add animal</a>
+                    <a class="nav-link" href="{% url 'my_listings' %}">My listings</a>
+                    <a class="nav-link" href="{% url 'my_applications' %}">My applications</a>
+                    <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                    {% if user.is_staff %}
+                        <a class="nav-link" href="{% url 'manage_applications' %}">Manage applications</a>
+                        <a class="nav-link" href="{% url 'admin_dashboard' %}">Admin panel</a>
+                    {% endif %}
+                    <form method="post" action="{% url 'logout' %}" class="ms-lg-2">
+                        {% csrf_token %}<button class="btn btn-sm btn-outline-light" type="submit">Log out</button>
+                    </form>
+                {% else %}
+                    <a class="nav-link" href="{% url 'login' %}">Log in</a>
+                    <a class="btn btn-sm btn-light ms-lg-2" href="{% url 'signup' %}">Create account</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+<main class="page-wrap">
+    {% if messages %}
+        <div class="mb-4" aria-live="polite">
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags|default:'success' }}{% endif %} message-alert" role="status">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

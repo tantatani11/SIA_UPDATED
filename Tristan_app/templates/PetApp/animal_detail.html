@@ -1,0 +1,48 @@
+{% extends "PetApp/base.html" %}
+{% block title %}{{ animal.pet_name }}{% endblock %}
+{% block content %}
+<a href="{% url 'directory' %}" class="text-decoration-none text-success small">← Back to directory</a>
+<div class="row g-4 mt-2">
+    <div class="col-lg-6">
+        {% if animal.image %}<img src="{{ animal.image.url }}" alt="Photo of {{ animal.pet_name }}" class="w-100 rounded-4 shadow-sm" style="max-height:520px;object-fit:cover">
+        {% else %}<div class="animal-placeholder rounded-4" style="height:380px" aria-label="No photo available">🐾</div>{% endif %}
+    </div>
+    <div class="col-lg-6">
+        <div class="eyebrow">{{ animal.species }}{% if animal.breed %} · {{ animal.breed }}{% endif %}</div>
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3"><h1 class="page-title">{{ animal.pet_name }}</h1><span class="status {% if animal.adoption_status == 'Pending' %}pending{% elif animal.adoption_status == 'Adopted' %}adopted{% else %}legacy{% endif %}">{{ animal.adoption_status }}</span></div>
+        <div class="animal-meta mt-3">{% if animal.age != None %}{{ animal.age }} year{{ animal.age|pluralize }}{% endif %}{% if animal.sex %} · {{ animal.sex }}{% endif %}{% if animal.location %} · {{ animal.location }}{% endif %}</div>
+        <div class="panel p-4 mt-4">
+            <h2 class="section-title mb-3">About {{ animal.pet_name }}</h2>
+            <p style="white-space:pre-line">{{ animal.description|default:"No description has been added yet." }}</p>
+            {% if animal.health_info %}<h3 class="h6 fw-bold mt-4">Health and vaccinations</h3><p class="mb-0" style="white-space:pre-line">{{ animal.health_info }}</p>{% endif %}
+        </div>
+        <div class="panel p-4 mt-3">
+            <h2 class="section-title mb-2">Listing contact</h2>
+            <div>{% if animal.owner_name %}{{ animal.owner_name }}{% elif animal.owner %}{{ animal.owner.get_full_name|default:animal.owner.username }}{% else %}Animal Adoption community{% endif %}</div>
+            <div class="animal-meta mt-2">Listed {{ animal.created_at|date:"F j, Y" }}{% if animal.updated_at != animal.created_at %} · Updated {{ animal.updated_at|date:"F j, Y" }}{% endif %}</div>
+        </div>
+        {% if can_manage %}
+            <div class="d-flex gap-2 mt-4">
+                <a class="btn btn-green px-3 py-2" href="{% url 'animal_update' animal.pet_id %}">Edit listing</a>
+                <form method="post" action="{% url 'animal_delete' animal.pet_id %}" onsubmit="return confirm('Remove this animal listing? This cannot be undone.');">
+                    {% csrf_token %}<button class="btn btn-outline-danger px-3 py-2" type="submit">Delete listing</button>
+                </form>
+            </div>
+        {% elif user.is_authenticated %}
+            <div class="mt-4">
+                {% if has_applied %}
+                    <div class="alert alert-info mb-0">You have already submitted an adoption application for this animal.</div>
+                {% elif animal.adoption_status == 'Adopted' %}
+                    <div class="alert alert-secondary mb-0">This animal has already been adopted.</div>
+                {% else %}
+                    <a class="btn btn-green px-4 py-2" href="{% url 'adopt_apply' animal.pet_id %}">Apply to adopt</a>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="mt-4">
+                <a class="btn btn-green px-4 py-2" href="{% url 'login' %}?next={% url 'adopt_apply' animal.pet_id %}">Log in to apply</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

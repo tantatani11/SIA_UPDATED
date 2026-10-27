@@ -1,0 +1,25 @@
+{% extends "PetApp/base.html" %}
+{% block title %}My Listings{% endblock %}
+{% block content %}
+<header class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div><div class="eyebrow">Your animals</div><h1 class="page-title">My listings</h1><p class="page-subtitle">Manage the animals you have added to the directory.</p></div>
+    <a class="btn btn-green px-3 py-2" href="{% url 'animal_create' %}">＋ Add an animal</a>
+</header>
+<div class="row g-3">
+    {% for animal in animals %}
+        <div class="col-md-6 col-xl-4"><article class="animal-card">
+            <a href="{% url 'animal_detail' animal.pet_id %}">{% if animal.image %}<img class="animal-photo" src="{{ animal.image.url }}" alt="Photo of {{ animal.pet_name }}" loading="lazy">{% else %}<div class="animal-placeholder" aria-hidden="true">🐾</div>{% endif %}</a>
+            <div class="animal-card-body">
+                <div class="d-flex justify-content-between align-items-start gap-2"><h2 class="h5 mb-1">{{ animal.pet_name }}</h2><span class="status">{{ animal.adoption_status }}</span></div>
+                <div class="animal-meta">{{ animal.species }} · {{ animal.breed|default:"Breed not specified" }}</div>
+                <div class="animal-meta mt-2">Updated {{ animal.updated_at|date:"M j, Y" }}</div>
+                <div class="d-flex gap-2 mt-3"><a class="btn btn-outline-green btn-sm" href="{% url 'animal_detail' animal.pet_id %}">View</a><a class="btn btn-green btn-sm" href="{% url 'animal_update' animal.pet_id %}">Edit</a>
+                    <form method="post" action="{% url 'animal_delete' animal.pet_id %}" onsubmit="return confirm('Remove this animal listing? This cannot be undone.');">{% csrf_token %}<button class="btn btn-outline-danger btn-sm" type="submit">Delete</button></form>
+                </div>
+            </div>
+        </article></div>
+    {% empty %}
+        <div class="col-12"><div class="panel empty-state"><strong>You haven’t listed an animal yet.</strong>When you add an animal, you can manage their listing here.<br><a class="btn btn-green mt-3" href="{% url 'animal_create' %}">Create your first listing</a></div></div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "PetApp/base.html" %}
+{% block title %}{% if is_edit %}Edit{% else %}Add{% endif %} animal{% endblock %}
+{% block content %}
+<div class="mx-auto" style="max-width:780px">
+    <a href="{% if is_edit %}{% url 'animal_detail' animal.pet_id %}{% else %}{% url 'directory' %}{% endif %}" class="text-decoration-none text-success small">← Cancel and return</a>
+    <header class="my-3"><div class="eyebrow">{% if is_edit %}Keep the listing current{% else %}A new friend{% endif %}</div>
+        <h1 class="page-title">{% if is_edit %}Update animal listing{% else %}Add an animal{% endif %}</h1>
+        <p class="page-subtitle">Tell the community about this animal and what would make a great home.</p></header>
+    <form method="post" enctype="multipart/form-data" class="panel p-4 p-md-5" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+        <div class="row g-3">
+            {% for field in form %}
+                <div class="{% if field.name == 'description' or field.name == 'health_info' %}col-12{% else %}col-md-6{% endif %}{% if field.name == 'species_other' %} d-none{% endif %}"{% if field.name == 'species_other' %} data-species-other{% endif %}>
+                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                    {% if field.errors %}<div class="text-danger small mt-1" role="alert">{{ field.errors }}</div>{% endif %}
+                </div>
+            {% endfor %}
+            <div class="col-12 d-flex justify-content-end gap-2 mt-4">
+                <a class="btn btn-outline-green px-3 py-2" href="{% if is_edit %}{% url 'animal_detail' animal.pet_id %}{% else %}{% url 'directory' %}{% endif %}">Cancel</a>
+                <button class="btn btn-green px-4 py-2" type="submit">{% if is_edit %}Save changes{% else %}Create listing{% endif %}</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    const speciesSelect = document.getElementById('id_species');
+    const speciesOtherField = document.querySelector('[data-species-other]');
+    if (speciesSelect && speciesOtherField) {
+        const updateOtherSpeciesVisibility = () => {
+            speciesOtherField.classList.toggle('d-none', speciesSelect.value !== 'Other');
+        };
+        speciesSelect.addEventListener('change', updateOtherSpeciesVisibility);
+        updateOtherSpeciesVisibility();
+    }
+</script>
+{% endblock %}

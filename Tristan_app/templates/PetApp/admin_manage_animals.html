@@ -1,0 +1,45 @@
+{% extends "PetApp/base.html" %}
+{% block title %}Manage Pet Statuses{% endblock %}
+{% block content %}
+<header class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div><div class="eyebrow">Staff workspace</div><h1 class="page-title">Manage pet statuses</h1>
+        <p class="page-subtitle">Update adoption status for any listing.</p></div>
+    <a class="btn btn-outline-green px-3 py-2" href="{% url 'admin_dashboard' %}">Back to admin panel</a>
+</header>
+<form method="get" class="panel p-3 p-md-4 mb-4 row g-2 align-items-center">
+    <div class="col-md-4">
+        <input name="q" value="{{ query }}" class="form-control" placeholder="Search name, species, or owner">
+    </div>
+    <div class="col-md-3">
+        <select name="status" class="form-select">
+            <option value="">All statuses</option>
+            {% for value,label in status_choices %}<option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+        </select>
+    </div>
+    <div class="col-md-auto d-flex gap-2">
+        <button class="btn btn-green px-3" type="submit">Filter</button>
+        <a class="btn btn-outline-green px-3" href="{% url 'admin_manage_animals' %}">Clear</a>
+    </div>
+</form>
+<div class="row g-3">
+    {% for animal in animals %}
+        <div class="col-12">
+            <article class="panel p-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                    <h2 class="h5 mb-1"><a class="text-decoration-none text-dark" href="{% url 'animal_detail' animal.pet_id %}">{{ animal.pet_name }}</a></h2>
+                    <div class="animal-meta">{{ animal.species }}{% if animal.breed %} · {{ animal.breed }}{% endif %} · Owner: {{ animal.owner.username|default:"Legacy" }}{% if animal.location %} · {{ animal.location }}{% endif %}</div>
+                </div>
+                <form method="post" action="{% url 'admin_update_animal_status' animal.pet_id %}" class="d-flex gap-2 align-items-center">
+                    {% csrf_token %}
+                    <select name="adoption_status" class="form-select" style="max-width:200px">
+                        {% for value,label in status_choices %}<option value="{{ value }}" {% if animal.adoption_status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+                    </select>
+                    <button class="btn btn-green px-3" type="submit">Update status</button>
+                </form>
+            </article>
+        </div>
+    {% empty %}
+        <div class="col-12"><div class="panel empty-state"><strong>No animals found.</strong></div></div>
+    {% endfor %}
+</div>
+{% endblock %}

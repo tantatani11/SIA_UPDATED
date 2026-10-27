@@ -1,0 +1,36 @@
+{% extends "PetApp/base.html" %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<div class="mx-auto" style="max-width:480px">
+    <div class="panel p-4 p-md-5">
+        <div class="text-center mb-4"><div class="eyebrow">Welcome back</div><h1 class="page-title" style="font-size:30px">Log in</h1><p class="page-subtitle">Sign in to manage your animal listings.</p></div>
+        <form method="post" novalidate>{% csrf_token %}
+            {% if form.non_field_errors %}<div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+            {% for field in form %}
+                {% if field.name != 'remember_me' %}
+                    <div class="mb-3"><label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {% if field.name == 'password' %}
+                            <div class="input-group">{{ field }}<button class="btn btn-outline-secondary" type="button" data-toggle-password="{{ field.id_for_label }}" aria-label="Show password">Show</button></div>
+                        {% else %}{{ field }}{% endif %}
+                        {% if field.errors %}<div class="text-danger small mt-1">{{ field.errors }}</div>{% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <div class="form-check mb-3">{{ form.remember_me }}<label class="form-check-label small" for="{{ form.remember_me.id_for_label }}">Keep me signed in on this device</label></div>
+            <button type="submit" class="btn btn-green w-100 py-2">Log in</button>
+        </form>
+        <div class="d-flex justify-content-between gap-2 mt-3 small"><a href="{% url 'password_reset' %}">Forgot password?</a><a href="{% url 'signup' %}">Create an account</a></div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}<script>
+document.querySelectorAll("[data-toggle-password]").forEach((button) => {
+    button.addEventListener("click", () => {
+        const input = document.getElementById(button.dataset.togglePassword);
+        const visible = input.type === "password";
+        input.type = visible ? "text" : "password";
+        button.textContent = visible ? "Hide" : "Show";
+        button.setAttribute("aria-label", visible ? "Hide password" : "Show password");
+    });
+});
+</script>{% endblock %}
