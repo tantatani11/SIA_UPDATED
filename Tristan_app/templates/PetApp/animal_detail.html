@@ -18,7 +18,11 @@
         </div>
         <div class="panel p-4 mt-3">
             <h2 class="section-title mb-2">Listing contact</h2>
+<<<<<<< HEAD
             <div>{% if animal.owner_name %}{{ animal.owner_name }}{% elif animal.owner %}{{ animal.owner.get_full_name|default:animal.owner.username }}{% else %}Animal Adoption community{% endif %}</div>
+=======
+            <div>{{ animal.owner_name|default:animal.owner.get_full_name|default:animal.owner.username|default:"Animal Adoption community" }}</div>
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
             <div class="animal-meta mt-2">Listed {{ animal.created_at|date:"F j, Y" }}{% if animal.updated_at != animal.created_at %} · Updated {{ animal.updated_at|date:"F j, Y" }}{% endif %}</div>
         </div>
         {% if can_manage %}
@@ -28,6 +32,7 @@
                     {% csrf_token %}<button class="btn btn-outline-danger px-3 py-2" type="submit">Delete listing</button>
                 </form>
             </div>
+<<<<<<< HEAD
         {% elif user.is_authenticated %}
             <div class="mt-4">
                 {% if has_applied %}
@@ -42,6 +47,8 @@
             <div class="mt-4">
                 <a class="btn btn-green px-4 py-2" href="{% url 'login' %}?next={% url 'adopt_apply' animal.pet_id %}">Log in to apply</a>
             </div>
+=======
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
         {% endif %}
     </div>
 </div>

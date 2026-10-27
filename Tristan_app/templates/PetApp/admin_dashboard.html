@@ -1,7 +1,11 @@
 {% extends "PetApp/base.html" %}
 {% block title %}Admin Panel{% endblock %}
 {% block content %}
+<<<<<<< HEAD
 <header class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4"><div><div class="eyebrow">Staff workspace</div><h1 class="page-title">Admin panel</h1><p class="page-subtitle">System overview and recent community activity.</p></div><div class="d-flex gap-2"><a class="btn btn-outline-green px-3 py-2" href="{% url 'admin_manage_animals' %}">Manage pet statuses</a><a class="btn btn-green px-3 py-2" href="{% url 'admin:index' %}">Open management tools</a></div></header>
+=======
+<header class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4"><div><div class="eyebrow">Staff workspace</div><h1 class="page-title">Admin panel</h1><p class="page-subtitle">System overview and recent community activity.</p></div><a class="btn btn-green px-3 py-2" href="{% url 'admin:index' %}">Open management tools</a></header>
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
 <div class="row g-3 mb-4">
     <div class="col-6 col-lg"><div class="stat-card"><div class="stat-label">Registered users</div><div class="stat-value">{{ user_count }}</div></div></div>
     <div class="col-6 col-lg"><div class="stat-card"><div class="stat-label">All listings</div><div class="stat-value">{{ animal_count }}</div></div></div>

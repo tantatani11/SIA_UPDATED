@@ -10,10 +10,13 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('animals/add/', views.animal_create, name='animal_create'),
     path('animals/<int:pet_id>/', views.animal_detail, name='animal_detail'),
+<<<<<<< HEAD
     path('animals/<int:pet_id>/apply/', views.adopt_apply, name='adopt_apply'),
     path('applications/', views.my_applications, name='my_applications'),
     path('applications/manage/', views.manage_applications, name='manage_applications'),
     path('applications/<int:application_id>/update/', views.update_application_status, name='update_application_status'),
+=======
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
     path('animals/<int:pet_id>/edit/', views.animal_update, name='animal_update'),
     path('animals/<int:pet_id>/delete/', views.animal_delete, name='animal_delete'),
     path('my-listings/', views.my_listings, name='my_listings'),
@@ -65,8 +68,11 @@ urlpatterns = [
         name='password_reset_complete',
     ),
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+<<<<<<< HEAD
     path('admin-dashboard/animals/', views.admin_manage_animals, name='admin_manage_animals'),
     path('admin-dashboard/animals/<int:pet_id>/status/', views.admin_update_animal_status, name='admin_update_animal_status'),
+=======
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
     path('pet_management/', RedirectView.as_view(pattern_name='directory', permanent=False), name='pet'),
     path('pet_management/<int:pet_id>/edit/', views.animal_update, name='pet_update'),
     path('pet_management/<int:pet_id>/delete/', views.animal_delete, name='pet_delete'),

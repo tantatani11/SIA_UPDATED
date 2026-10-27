@@ -83,12 +83,15 @@ class Pet(models.Model):
         super().save(*args, **kwargs)
 
 
+<<<<<<< HEAD
 def profile_picture_path(instance, filename):
     extension = filename.rsplit('.', 1)[-1].lower()
     from uuid import uuid4
     return f'profile_pics/{uuid4().hex}.{extension}'
 
 
+=======
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
 class UserProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
@@ -97,6 +100,7 @@ class UserProfile(models.Model):
     )
     contact = models.CharField(max_length=40, blank=True)
     bio = models.TextField(max_length=500, blank=True)
+<<<<<<< HEAD
     profile_picture = models.FileField(
         upload_to=profile_picture_path,
         blank=True,
@@ -148,3 +152,8 @@ class AdoptionApplication(models.Model):
             if kwargs.get('update_fields') is not None:
                 kwargs['update_fields'] = set(kwargs['update_fields']) | {'updated_at'}
         super().save(*args, **kwargs)
+=======
+
+    def __str__(self):
+        return f'{self.user.username} profile'
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f

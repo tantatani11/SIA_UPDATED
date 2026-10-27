@@ -28,6 +28,7 @@ class DirectoryTests(TestCase):
         self.assertContains(response, 'Milo')
         self.assertContains(response, 'Terrier')
 
+<<<<<<< HEAD
     def test_view_details_opens_the_selected_animal(self):
         response = self.client.get(reverse('directory'))
         detail_url = reverse('animal_detail', args=[self.animal.pk])
@@ -51,6 +52,8 @@ class DirectoryTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Animal Adoption community')
 
+=======
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
     def test_directory_search_filters_name_species_and_breed(self):
         response = self.client.get(reverse('directory'), {'q': 'Terrier'})
 
@@ -214,6 +217,7 @@ class AccountAndListingTests(TestCase):
         self.assertEqual(new_animal.owner, self.owner)
         self.assertEqual(new_animal.owner_name, 'owner')
 
+<<<<<<< HEAD
     def test_create_listing_accepts_custom_species(self):
         self.client.force_login(self.owner)
         response = self.client.post(reverse('animal_create'), {
@@ -242,6 +246,8 @@ class AccountAndListingTests(TestCase):
         self.assertContains(response, '<option value="Other" selected>Other (specify)</option>', html=True)
         self.assertContains(response, 'value="Sugar glider"')
 
+=======
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
     def test_create_listing_rejects_non_image_upload(self):
         self.client.force_login(self.owner)
         response = self.client.post(reverse('animal_create'), {

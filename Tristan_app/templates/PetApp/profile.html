@@ -4,7 +4,11 @@
 <header class="mb-4"><div class="eyebrow">Your account</div><h1 class="page-title">My profile</h1><p class="page-subtitle">Update your account and the contact information shown on your listings.</p></header>
 <div class="row g-4">
     <div class="col-lg-8">
+<<<<<<< HEAD
         <form method="post" enctype="multipart/form-data" class="panel p-4 p-md-5" novalidate>
+=======
+        <form method="post" class="panel p-4 p-md-5" novalidate>
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
             {% csrf_token %}
             <h2 class="section-title mb-3">Personal information</h2>
             {% for field in account_form %}
@@ -20,12 +24,16 @@
         </form>
     </div>
     <aside class="col-lg-4">
+<<<<<<< HEAD
         <div class="panel p-4 mb-3">
             {% if profile_obj.profile_picture %}
                 <img src="{{ profile_obj.profile_picture.url }}" alt="Profile picture" class="rounded-circle mb-3" style="width:80px;height:80px;object-fit:cover">
             {% else %}
                 <div class="rounded-circle d-grid place-items-center mb-3" style="width:80px;height:80px;background:#dce9d7;color:#245c4b;font-size:32px;font-weight:700">{{ user.first_name|default:user.username|first|upper }}</div>
             {% endif %}
+=======
+        <div class="panel p-4 mb-3"><div class="rounded-circle d-grid place-items-center mb-3" style="width:60px;height:60px;background:#dce9d7;color:#245c4b;font-size:24px;font-weight:700">{{ user.first_name|default:user.username|first|upper }}</div>
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
             <h2 class="section-title">{{ user.get_full_name|default:user.username }}</h2><div class="animal-meta mt-1">{{ user.email }}</div>
             <div class="animal-meta mt-3">Member since {{ user.date_joined|date:"F Y" }}</div><div class="animal-meta mt-1">{{ my_count }} listing{{ my_count|pluralize }}</div>
         </div>

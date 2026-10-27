@@ -3,12 +3,17 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
+<<<<<<< HEAD
 from .models import Pet, UserProfile, AdoptionApplication
+=======
+from .models import Pet, UserProfile
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
 
 User = get_user_model()
 
 
 class AnimalForm(forms.ModelForm):
+<<<<<<< HEAD
     SPECIES_CHOICES = [
         ('Dog', 'Dog'),
         ('Cat', 'Cat'),
@@ -41,6 +46,8 @@ class AnimalForm(forms.ModelForm):
         }),
     )
 
+=======
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
     class Meta:
         model = Pet
         fields = [
@@ -49,6 +56,10 @@ class AnimalForm(forms.ModelForm):
         ]
         widgets = {
             'pet_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Animal name'}),
+<<<<<<< HEAD
+=======
+            'species': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Dog, cat, rabbit...'}),
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
             'breed': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Breed or mix'}),
             'age': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'max': 100, 'placeholder': 'Age in years'}),
             'sex': forms.Select(attrs={'class': 'form-select'}, choices=[('', 'Select sex'), *Pet.SEX_CHOICES]),
@@ -60,6 +71,7 @@ class AnimalForm(forms.ModelForm):
             'image': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/jpeg,image/png,image/webp'}),
         }
 
+<<<<<<< HEAD
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         known_species = {value for value, _ in self.SPECIES_CHOICES if value != 'Other'}
@@ -77,6 +89,8 @@ class AnimalForm(forms.ModelForm):
                 self.add_error('species_other', 'Enter the animal species.')
         return cleaned_data
 
+=======
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
 class SignUpForm(UserCreationForm):
     terms_accepted = forms.BooleanField(
         required=True,
@@ -164,6 +178,7 @@ class AccountForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
+<<<<<<< HEAD
         fields = ('profile_picture', 'contact', 'bio')
         widgets = {
             'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/jpeg,image/png,image/webp'}),
@@ -205,3 +220,10 @@ class AdoptionApplicationForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+=======
+        fields = ('contact', 'bio')
+        widgets = {
+            'contact': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone or other contact'}),
+            'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'maxlength': 500}),
+        }
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f

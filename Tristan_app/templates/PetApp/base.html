@@ -36,7 +36,11 @@
         .message-alert { border:0; border-radius:10px; font-size:14px; }
         .animal-card { overflow:hidden; height:100%; transition:transform .18s ease,box-shadow .18s ease; }
         .animal-card:hover { transform:translateY(-3px); box-shadow:0 12px 28px rgba(27,55,43,.1); }
+<<<<<<< HEAD
         .animal-photo,.animal-placeholder { display:grid; width:100%; height:280px; place-items:center; background:#edf3e9; object-fit:cover; }
+=======
+        .animal-photo,.animal-placeholder { display:grid; width:100%; height:205px; place-items:center; background:#edf3e9; object-fit:cover; }
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
         .animal-placeholder { color:#6f8b70; font-size:48px; }
         .animal-card-body { padding:18px; }
         .animal-meta { color:var(--muted); font-size:13px; }
@@ -69,12 +73,17 @@
                     <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
                     <a class="nav-link" href="{% url 'animal_create' %}">Add animal</a>
                     <a class="nav-link" href="{% url 'my_listings' %}">My listings</a>
+<<<<<<< HEAD
                     <a class="nav-link" href="{% url 'my_applications' %}">My applications</a>
                     <a class="nav-link" href="{% url 'profile' %}">Profile</a>
                     {% if user.is_staff %}
                         <a class="nav-link" href="{% url 'manage_applications' %}">Manage applications</a>
                         <a class="nav-link" href="{% url 'admin_dashboard' %}">Admin panel</a>
                     {% endif %}
+=======
+                    <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                    {% if user.is_staff %}<a class="nav-link" href="{% url 'admin_dashboard' %}">Admin panel</a>{% endif %}
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
                     <form method="post" action="{% url 'logout' %}" class="ms-lg-2">
                         {% csrf_token %}<button class="btn btn-sm btn-outline-light" type="submit">Log out</button>
                     </form>

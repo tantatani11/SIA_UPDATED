@@ -11,7 +11,11 @@
         {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
         <div class="row g-3">
             {% for field in form %}
+<<<<<<< HEAD
                 <div class="{% if field.name == 'description' or field.name == 'health_info' %}col-12{% else %}col-md-6{% endif %}{% if field.name == 'species_other' %} d-none{% endif %}"{% if field.name == 'species_other' %} data-species-other{% endif %}>
+=======
+                <div class="{% if field.name == 'description' or field.name == 'health_info' %}col-12{% else %}col-md-6{% endif %}">
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
                     <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
                     {{ field }}
                     {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
@@ -26,6 +30,7 @@
     </form>
 </div>
 {% endblock %}
+<<<<<<< HEAD
 {% block scripts %}
 <script>
     const speciesSelect = document.getElementById('id_species');
@@ -39,3 +44,5 @@
     }
 </script>
 {% endblock %}
+=======
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f

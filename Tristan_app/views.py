@@ -11,13 +11,20 @@ from django.views.decorators.http import require_POST
 
 from .forms import (
     AccountForm,
+<<<<<<< HEAD
     AdoptionApplicationForm,
+=======
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
     AnimalForm,
     EmailOrUsernameAuthenticationForm,
     ProfileForm,
     SignUpForm,
 )
+<<<<<<< HEAD
 from .models import Pet, UserProfile, AdoptionApplication
+=======
+from .models import Pet, UserProfile
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
 
 
 class AnimalLoginView(LoginView):
@@ -127,19 +134,26 @@ def dashboard(request):
 
 def animal_detail(request, pet_id):
     animal = get_object_or_404(Pet.objects.select_related('owner'), pk=pet_id)
+<<<<<<< HEAD
     has_applied = False
     if request.user.is_authenticated:
         has_applied = AdoptionApplication.objects.filter(animal=animal, applicant=request.user).exists()
+=======
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
     return render(request, 'PetApp/animal_detail.html', {
         'animal': animal,
         'can_manage': request.user.is_authenticated and (
             request.user.is_staff or animal.owner_id == request.user.pk
         ),
+<<<<<<< HEAD
         'has_applied': has_applied,
+=======
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
     })
 
 
 @login_required
+<<<<<<< HEAD
 def adopt_apply(request, pet_id):
     animal = get_object_or_404(Pet, pk=pet_id)
     if animal.adoption_status == Pet.STATUS_ADOPTED:
@@ -203,6 +217,8 @@ def update_application_status(request, application_id):
 
 
 @login_required
+=======
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
 def animal_create(request):
     form = AnimalForm(request.POST or None, request.FILES or None)
     if request.method == 'POST' and form.is_valid():
@@ -267,7 +283,11 @@ def sign_up(request):
 def profile(request):
     profile, _ = UserProfile.objects.get_or_create(user=request.user)
     account_form = AccountForm(request.POST or None, instance=request.user, prefix='account')
+<<<<<<< HEAD
     profile_form = ProfileForm(request.POST or None, request.FILES or None, instance=profile, prefix='profile')
+=======
+    profile_form = ProfileForm(request.POST or None, instance=profile, prefix='profile')
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
     if request.method == 'POST':
         if account_form.is_valid() and profile_form.is_valid():
             with transaction.atomic():
@@ -279,7 +299,10 @@ def profile(request):
         'account_form': account_form,
         'profile_form': profile_form,
         'my_count': Pet.objects.filter(owner=request.user).count(),
+<<<<<<< HEAD
         'profile_obj': profile,
+=======
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
     })
 
 
@@ -298,6 +321,7 @@ def admin_dashboard(request):
         'recent_animals': animals.select_related('owner').order_by('-updated_at')[:8],
     }
     return render(request, 'PetApp/admin_dashboard.html', context)
+<<<<<<< HEAD
 
 
 @login_required
@@ -334,3 +358,5 @@ def admin_update_animal_status(request, pet_id):
     else:
         messages.error(request, 'Invalid status.')
     return redirect(request.META.get('HTTP_REFERER') or 'admin_manage_animals')
+=======
+>>>>>>> 4a51f2e52da787607f79032f8515351c80a6b59f
